@@ -1,0 +1,5 @@
+ id | name  |      email      |                           password                           
+----+-------+-----------------+--------------------------------------------------------------
+  1 | Rahul | rahul@gmail.com | $2a$10$sia2eyUoc.jcKVdCVjpej.ce6rI0zWCi/KB4muF.KFwpBQL8p1VlO
+(1 row)
+
