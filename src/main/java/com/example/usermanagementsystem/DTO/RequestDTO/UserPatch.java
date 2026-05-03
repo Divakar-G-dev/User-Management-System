@@ -6,7 +6,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
 
-public record UserRequest(
+public record UserPatch(
         @NotBlank(message = "Name cannot be Empty")
         @Pattern(
                 regexp = "^[A-Za-z ]+$",
@@ -16,7 +16,7 @@ public record UserRequest(
         @Min(value = 18, message = "Age must be greater than 18")
         @Max(value = 99, message = "Age must be less than 99")
         Integer age,
-        @NotBlank(message = "Name cannot be Empty")
+        @Email(message = "Enter a valid Email")
         @Column(unique = true)
         String email,
         @NotBlank(message = "Password cannot be Empty")
@@ -28,5 +28,5 @@ public record UserRequest(
         @NotNull(message = "Role must be a ADMIN or USER cannot be empty")
         @Enumerated(EnumType.STRING)
         Role role
-        )
-{ }
+) {
+}

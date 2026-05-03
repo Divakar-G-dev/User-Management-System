@@ -1,5 +1,6 @@
 package com.example.usermanagementsystem.controller;
 
+import com.example.usermanagementsystem.DTO.RequestDTO.UserPatch;
 import com.example.usermanagementsystem.DTO.RequestDTO.UserRequest;
 import com.example.usermanagementsystem.DTO.ResponseDTO.APIResponse;
 import com.example.usermanagementsystem.DTO.ResponseDTO.UserResponse;
@@ -24,7 +25,6 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequestMapping("/user")
-@EnableMethodSecurity
 public class UserController {
     private final IUserService userService;
 
@@ -34,10 +34,9 @@ public class UserController {
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> createUser(@Valid @RequestBody UserRequest userRequest){
+    public ResponseEntity<APIResponse<UserResponse>> createUser(@Valid @RequestBody UserRequest userRequest){
         log.info("Successfully Entered into the Create User API");
-        userService.createUser(userRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new APIResponse<>(null,"User Created Successfully",true));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new APIResponse<>(userService.createUser(userRequest),"User Created Successfully",true));
     }
 
     @PostMapping("/create-bulk")
@@ -56,13 +55,13 @@ public class UserController {
     @GetMapping("/get-users")
     public ResponseEntity<APIResponse<List<UserResponse>>> getAllUser(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "3") int size,
+            @RequestParam(defaultValue = "2") int size,
             @RequestParam(defaultValue = "age") String sortBy,
             @RequestParam(defaultValue = "true") boolean ascending
     ){
-        Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-        Pageable pageable = PageRequest.of(page, size, sort);
         log.info("Successfully Entered into the Get All User API");
+        Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page <= 0 ? 0 : size - 1, size <= 0 ? 2 : size, sort);
         return ResponseEntity.status(HttpStatus.OK).body(new APIResponse<>(userService.getAllUser(pageable),"Fetched All Users Successfully",true));
     }
 
@@ -83,13 +82,21 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<APIResponse<List<UserResponse>>> searchArticles(@RequestParam String search) {
+    public ResponseEntity<APIResponse<List<UserResponse>>> searchSearchUserByName(@RequestParam String search) {
+        log.info("Successfully Entered into the Search User by Name API");
         List<UserResponse> foundArticles = userService.searchUserByName(search);
         if (!foundArticles.isEmpty()) {
             return ResponseEntity.status(HttpStatus.FOUND).body(new APIResponse<>(foundArticles,"Found the User By Name",true));
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse<>(null,"Found the User By Name",true));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse<>(null,"User Not Exist",false));
         }
+    }
+
+    @PatchMapping("/update-particular/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<APIResponse<UserResponse>> updateParticular(@PathVariable Long id,@RequestBody UserPatch userPatch){
+        log.info("Successfully Entered into the Patch API");
+        return ResponseEntity.status(HttpStatus.OK).body(new APIResponse<>(userService.updateParticular(id,userPatch),"User Updated Successfully",true));
     }
 
 }

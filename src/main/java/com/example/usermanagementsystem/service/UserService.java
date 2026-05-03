@@ -1,5 +1,6 @@
 package com.example.usermanagementsystem.service;
 
+import com.example.usermanagementsystem.DTO.RequestDTO.UserPatch;
 import com.example.usermanagementsystem.DTO.RequestDTO.UserRequest;
 import com.example.usermanagementsystem.DTO.ResponseDTO.UserResponse;
 import com.example.usermanagementsystem.Entity.UserModel;
@@ -18,7 +19,6 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-@Transactional
 public class UserService implements IUserService {
     private final UserRepo userRepo;
     private final PasswordEncoder encoder;
@@ -29,11 +29,12 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void createUser(UserRequest userRequest) {
+    public UserResponse createUser(UserRequest userRequest) {
         UserModel user = UserMapper.toEntity(userRequest);
         user.setPassword(encoder.encode(user.getPassword()));
-        log.info("User Created Successfully");
         userRepo.save(user);
+        log.info("User Created Successfully");
+        return UserMapper.toResponse(user);
     }
 
     @Override
@@ -66,12 +67,15 @@ public class UserService implements IUserService {
         user.setEmail(userRequest.email());
         user.setPassword(userRequest.password());
         UserModel updatedUser = userRepo.save(user);
+        log.info("User Updated Successfully");
         return UserMapper.toResponse(updatedUser);
     }
 
     @Override
     public void deleteUser(Long id) {
-        userRepo.deleteById(id);
+        UserModel user = userRepo.findById(id).orElseThrow(()->new UserNotFound("User Not Exist"));
+        user.setActive(false);
+        userRepo.save(user);
         log.info("User Deleted Successfully");
     }
 
@@ -82,13 +86,28 @@ public class UserService implements IUserService {
             usermodel.setPassword(encoder.encode(usermodel.getPassword()));
             return usermodel;
         }).toList();
+        log.info("Bulk User Created Successfully");
         return userRepo.saveAll(list).stream().map(UserMapper::toResponse).toList();
     }
 
     @Override
     public List<UserResponse> searchUserByName(String search) {
         List<UserModel> user = userRepo.findUserBySearch(search);
+        log.info("User Found By Search Successfully");
         return user.stream().map(UserMapper::toResponse).toList();
+    }
+
+    @Override
+    public UserResponse updateParticular(Long id, UserPatch userPatch) {
+        UserModel user=userRepo.findById(id).orElseThrow(()->new UserNotFound("User Not Found"));
+        if(userPatch.name()!=null) user.setName(userPatch.name());
+        if(userPatch.age()!=null) user.setAge(userPatch.age());
+        if(userPatch.email()!=null) user.setEmail(userPatch.email());
+        if(userPatch.password()!=null) user.setPassword(userPatch.password());
+        if(userPatch.role()!=null) user.setRole(userPatch.role());
+        userRepo.save(user);
+        log.info("User Particulars Updated Successfully");
+        return UserMapper.toResponse(user);
     }
 
 }

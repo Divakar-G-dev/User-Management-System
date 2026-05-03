@@ -1,5 +1,6 @@
 package com.example.usermanagementsystem.service;
 
+import com.example.usermanagementsystem.DTO.RequestDTO.UserPatch;
 import com.example.usermanagementsystem.DTO.RequestDTO.UserRequest;
 import com.example.usermanagementsystem.DTO.ResponseDTO.UserResponse;
 import org.springframework.data.domain.Pageable;
@@ -9,7 +10,7 @@ import java.util.List;
 
 @Service
 public interface IUserService {
-    void createUser(UserRequest userRequest);
+     UserResponse createUser(UserRequest userRequest);
 
     UserResponse getUserById(Long id);
 
@@ -22,4 +23,7 @@ public interface IUserService {
     List<UserResponse> createBulkUser(List<UserRequest> userRequest);
 
     List<UserResponse> searchUserByName(String search);
+
+    UserResponse updateParticular(Long id, UserPatch userPatch);
+
 }

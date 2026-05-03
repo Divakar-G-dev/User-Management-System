@@ -1,6 +1,7 @@
 package com.example.usermanagementsystem.controller;
 
 import com.example.usermanagementsystem.DTO.RequestDTO.AuthRequest;
+import com.example.usermanagementsystem.DTO.ResponseDTO.APIResponse;
 import com.example.usermanagementsystem.DTO.ResponseDTO.TokenResponse;
 import com.example.usermanagementsystem.service.UserInfo;
 import com.example.usermanagementsystem.service.JwtService;
@@ -26,7 +27,7 @@ public class AuthorizeController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<APIResponse<TokenResponse>> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
         log.info("Login request received for email={}", authRequest.email());
         try {
             Authentication authentication = authenticationManager.authenticate(
@@ -40,10 +41,10 @@ public class AuthorizeController {
                         .orElse("ROLE_USER");
                 TokenResponse token = jwtService.generateToken(authRequest.email(),role);
                 log.info("Authentication successful for email={}", authRequest.email());
-                return ResponseEntity.status(HttpStatus.OK).body(token);
+                return ResponseEntity.status(HttpStatus.OK).body(new APIResponse<>(token, "Login Successfully", true));
             }
         } catch (AuthenticationException ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new APIResponse<>(null, "Invalid email or password", false));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
