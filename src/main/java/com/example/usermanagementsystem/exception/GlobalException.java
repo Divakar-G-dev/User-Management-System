@@ -1,25 +1,15 @@
 package com.example.usermanagementsystem.exception;
 
-import com.example.usermanagementsystem.DTO.ResponseDTO.APIResponse;
-import com.example.usermanagementsystem.filter.JwtAuthFilter;
+import com.example.usermanagementsystem.DTO.APIResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -29,6 +19,12 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 public class GlobalException {
     @ExceptionHandler(UserNotFound.class)
     public ResponseEntity<APIResponse<?>> handleUserNotFound(UserNotFound ex) {
+        log.error(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse<>(null, ex.getMessage(), false));
+    }
+
+    @ExceptionHandler(OrderNotFound.class)
+    public ResponseEntity<APIResponse<?>> handleOrderNotFound(OrderNotFound ex) {
         log.error(ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse<>(null, ex.getMessage(), false));
     }

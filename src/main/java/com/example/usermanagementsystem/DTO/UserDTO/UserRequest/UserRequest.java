@@ -1,12 +1,12 @@
-package com.example.usermanagementsystem.DTO.RequestDTO;
+package com.example.usermanagementsystem.DTO.UserDTO.UserRequest;
 
-import com.example.usermanagementsystem.Enum.Role;
+import com.example.usermanagementsystem.Enum.UserEnum.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
 
-public record UserPatch(
+public record UserRequest(
         @NotBlank(message = "Name cannot be Empty")
         @Pattern(
                 regexp = "^[A-Za-z ]+$",
@@ -16,7 +16,7 @@ public record UserPatch(
         @Min(value = 18, message = "Age must be greater than 18")
         @Max(value = 99, message = "Age must be less than 99")
         Integer age,
-        @Email(message = "Enter a valid Email")
+        @NotBlank(message = "Name cannot be Empty")
         @Column(unique = true)
         String email,
         @NotBlank(message = "Password cannot be Empty")
@@ -28,5 +28,5 @@ public record UserPatch(
         @NotNull(message = "Role must be a ADMIN or USER cannot be empty")
         @Enumerated(EnumType.STRING)
         Role role
-) {
-}
+        )
+{ }

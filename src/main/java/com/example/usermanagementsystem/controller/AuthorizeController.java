@@ -1,8 +1,8 @@
 package com.example.usermanagementsystem.controller;
 
-import com.example.usermanagementsystem.DTO.RequestDTO.AuthRequest;
-import com.example.usermanagementsystem.DTO.ResponseDTO.APIResponse;
-import com.example.usermanagementsystem.DTO.ResponseDTO.TokenResponse;
+import com.example.usermanagementsystem.DTO.UserDTO.UserRequest.AuthRequest;
+import com.example.usermanagementsystem.DTO.APIResponse;
+import com.example.usermanagementsystem.DTO.TokenResponse;
 import com.example.usermanagementsystem.service.UserInfo;
 import com.example.usermanagementsystem.service.JwtService;
 

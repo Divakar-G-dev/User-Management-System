@@ -1,16 +1,14 @@
-package com.example.usermanagementsystem.service;
+package com.example.usermanagementsystem.service.UserService;
 
-import com.example.usermanagementsystem.DTO.RequestDTO.UserPatch;
-import com.example.usermanagementsystem.DTO.RequestDTO.UserRequest;
-import com.example.usermanagementsystem.DTO.ResponseDTO.UserResponse;
+import com.example.usermanagementsystem.DTO.UserDTO.UserRequest.UserPatch;
+import com.example.usermanagementsystem.DTO.UserDTO.UserRequest.UserRequest;
+import com.example.usermanagementsystem.DTO.UserDTO.UserResponse.UserResponse;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public interface IUserService {
-     UserResponse createUser(UserRequest userRequest);
+    UserResponse createUser(UserRequest userRequest);
 
     UserResponse getUserById(Long id);
 

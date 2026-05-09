@@ -1,17 +1,16 @@
-package com.example.usermanagementsystem.Entity;
+package com.example.usermanagementsystem.Entity.UserEntity;
 
+import com.example.usermanagementsystem.Entity.OrderEntity.OrderModel;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
-import com.example.usermanagementsystem.Enum.Role;
-import org.springframework.boot.context.properties.bind.DefaultValue;
+import com.example.usermanagementsystem.Enum.UserEnum.Role;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -50,4 +49,6 @@ public class UserModel {
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime updatedAt;
+    @OneToMany(mappedBy = "userModel", cascade = CascadeType.ALL)
+    private List<OrderModel> orders;
 }

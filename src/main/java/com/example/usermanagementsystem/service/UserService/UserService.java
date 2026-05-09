@@ -1,13 +1,12 @@
-package com.example.usermanagementsystem.service;
+package com.example.usermanagementsystem.service.UserService;
 
-import com.example.usermanagementsystem.DTO.RequestDTO.UserPatch;
-import com.example.usermanagementsystem.DTO.RequestDTO.UserRequest;
-import com.example.usermanagementsystem.DTO.ResponseDTO.UserResponse;
-import com.example.usermanagementsystem.Entity.UserModel;
-import com.example.usermanagementsystem.Mapper.UserMapper;
+import com.example.usermanagementsystem.DTO.UserDTO.UserRequest.UserPatch;
+import com.example.usermanagementsystem.DTO.UserDTO.UserRequest.UserRequest;
+import com.example.usermanagementsystem.DTO.UserDTO.UserResponse.UserResponse;
+import com.example.usermanagementsystem.Entity.UserEntity.UserModel;
+import com.example.usermanagementsystem.Mapper.UserMapper.UserMapper;
 import com.example.usermanagementsystem.exception.UserNotFound;
-import com.example.usermanagementsystem.repository.UserRepo;
-import jakarta.transaction.Transactional;
+import com.example.usermanagementsystem.repository.UserRepo.UserRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,8 +39,7 @@ public class UserService implements IUserService {
     @Override
     public UserResponse getUserById(Long id) {
         log.info("Fetching User with ID");
-        return userRepo.findById(id)
-                .map(UserMapper::toResponse)
+        return userRepo.findById(id).map(UserMapper::toResponse)
                 .orElseThrow(() -> new UserNotFound("User not found"));
     }
 
@@ -52,10 +50,7 @@ public class UserService implements IUserService {
         if (userPage.isEmpty()) {
             throw new UserNotFound("No users found on page: " + pageable.getPageNumber());
         }
-        return userPage.getContent()
-                .stream()
-                .map(UserMapper::toResponse)
-                .collect(Collectors.toList());
+        return userPage.getContent().stream().map(UserMapper::toResponse).collect(Collectors.toList());
     }
 
     @Override
@@ -74,6 +69,9 @@ public class UserService implements IUserService {
     @Override
     public void deleteUser(Long id) {
         UserModel user = userRepo.findById(id).orElseThrow(()->new UserNotFound("User Not Exist"));
+        if(!user.isActive()) {
+            throw  new UserNotFound("User Already Deleted");
+        }
         user.setActive(false);
         userRepo.save(user);
         log.info("User Deleted Successfully");

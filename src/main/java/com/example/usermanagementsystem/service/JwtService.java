@@ -1,6 +1,6 @@
 package com.example.usermanagementsystem.service;
 
-import com.example.usermanagementsystem.DTO.ResponseDTO.TokenResponse;
+import com.example.usermanagementsystem.DTO.TokenResponse;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

@@ -1,4 +1,4 @@
-package com.example.usermanagementsystem.DTO.ResponseDTO;
+package com.example.usermanagementsystem.DTO;
 
 public record APIResponse<T>(
         T data,

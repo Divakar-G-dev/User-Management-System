@@ -1,8 +1,8 @@
-package com.example.usermanagementsystem.Mapper;
+package com.example.usermanagementsystem.Mapper.UserMapper;
 
-import com.example.usermanagementsystem.DTO.RequestDTO.UserRequest;
-import com.example.usermanagementsystem.DTO.ResponseDTO.UserResponse;
-import com.example.usermanagementsystem.Entity.UserModel;
+import com.example.usermanagementsystem.DTO.UserDTO.UserRequest.UserRequest;
+import com.example.usermanagementsystem.DTO.UserDTO.UserResponse.UserResponse;
+import com.example.usermanagementsystem.Entity.UserEntity.UserModel;
 
 public class UserMapper {
     public static UserModel toEntity(UserRequest request){

@@ -1,25 +1,20 @@
-package com.example.usermanagementsystem.controller;
+package com.example.usermanagementsystem.controller.UserController;
 
-import com.example.usermanagementsystem.DTO.RequestDTO.UserPatch;
-import com.example.usermanagementsystem.DTO.RequestDTO.UserRequest;
-import com.example.usermanagementsystem.DTO.ResponseDTO.APIResponse;
-import com.example.usermanagementsystem.DTO.ResponseDTO.UserResponse;
-import com.example.usermanagementsystem.Entity.UserModel;
-import com.example.usermanagementsystem.service.IUserService;
+import com.example.usermanagementsystem.DTO.UserDTO.UserRequest.UserPatch;
+import com.example.usermanagementsystem.DTO.UserDTO.UserRequest.UserRequest;
+import com.example.usermanagementsystem.DTO.APIResponse;
+import com.example.usermanagementsystem.DTO.UserDTO.UserResponse.UserResponse;
+import com.example.usermanagementsystem.service.UserService.IUserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.webmvc.autoconfigure.WebMvcProperties;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -84,9 +79,9 @@ public class UserController {
     @GetMapping("/search")
     public ResponseEntity<APIResponse<List<UserResponse>>> searchSearchUserByName(@RequestParam String search) {
         log.info("Successfully Entered into the Search User by Name API");
-        List<UserResponse> foundArticles = userService.searchUserByName(search);
-        if (!foundArticles.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.FOUND).body(new APIResponse<>(foundArticles,"Found the User By Name",true));
+        List<UserResponse> foundUser = userService.searchUserByName(search);
+        if (!foundUser.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.FOUND).body(new APIResponse<>(foundUser,"Found the User By Name",true));
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse<>(null,"User Not Exist",false));
         }

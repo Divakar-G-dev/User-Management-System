@@ -1,7 +1,7 @@
 package com.example.usermanagementsystem.configuration;
 
+import com.example.usermanagementsystem.DTO.APIResponse;
 import com.example.usermanagementsystem.filter.JwtAuthFilter;
-import com.example.usermanagementsystem.Entity.UserModel;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import tools.jackson.databind.ObjectMapper;
 
 @Configuration
 @EnableWebSecurity
@@ -40,14 +41,9 @@ public class SecurityConfig {
                         .authenticationEntryPoint((request, response, authException) -> {
                             response.setStatus(HttpStatus.UNAUTHORIZED.value());
                             response.setContentType("application/json");
-                            String jsonResponse = """
-                                    {
-                                      "data": null,
-                                      "message": "Authentication required. Please login.",
-                                      "success": false
-                                    }
-                                    """;
-                            response.getWriter().write(jsonResponse);
+                            APIResponse<?> apiResponse = new APIResponse<>(null,"Authentication required. Please login",false);
+                            ObjectMapper mapper = new ObjectMapper();
+                            response.getWriter().write(mapper.writeValueAsString(apiResponse));
                         })
                 )
                 .authorizeHttpRequests(auth -> auth
